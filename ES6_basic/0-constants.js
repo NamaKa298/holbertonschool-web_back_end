@@ -12,3 +12,6 @@ export function taskNext() {
   combination += getLast();
   return combination;
 }
+
+console.log(1+2)
+console.log(`${taskFirst()} ${taskNext()}`);
