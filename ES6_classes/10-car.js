@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default class Car {
   constructor(brand, motor, color) {
     if (typeof brand !== 'string') {
@@ -48,6 +49,7 @@ export default class Car {
   }
 
   cloneCar() {
-    return new this.constructor(this._brand, this._motor, this._color);
+    const constructor = Reflect.getPrototypeOf(this).constructor;
+    return new constructor(this._brand, this._motor, this._color);
   }
 }
