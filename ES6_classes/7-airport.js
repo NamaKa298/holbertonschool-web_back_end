@@ -33,6 +33,6 @@ export default class Airport {
   }
 
   toString() {
-    return `[objet ${this._code}]`;
+    return `[object ${this._code}]`;
   }
 }
