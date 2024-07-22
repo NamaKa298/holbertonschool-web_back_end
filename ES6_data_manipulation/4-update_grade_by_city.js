@@ -8,5 +8,5 @@ export default function updateStudentGradeByCity(listOfStudents, city, newGrades
     // eslint-disable-next-line no-param-reassign
     student.grade = matchingGrade ? matchingGrade.grade : 'N/A';
   });
-  return studentsByCity;
+  return studentsByCity.map((student) => student);
 }
