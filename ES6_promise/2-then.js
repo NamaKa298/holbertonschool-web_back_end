@@ -1,5 +1,5 @@
 export default function handleResponseFromAPI(promise) {
-  if (promise === true) {
+  if (promise) {
     console.log('Got a response from the API');
     return Promise.resolve({ status: 200, body: 'Success' });
   }
