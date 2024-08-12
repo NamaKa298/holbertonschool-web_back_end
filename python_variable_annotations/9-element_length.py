@@ -6,4 +6,5 @@ from typing import Iterable, Sequence, List, Tuple
 
 
 def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
+    """Retourne une liste de tuples"""
     return [(i, len(i)) for i in lst]
