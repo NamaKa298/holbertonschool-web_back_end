@@ -11,8 +11,7 @@ def measure_time(n: int, max_delay: int) -> float:
     and max_delay as arguments that measures the total
     execution time for wait_n(n, max_delay), and returns
     total_time / n. Your function should return a float."""
-    listOfDelay = wait_n(n, max_delay)
-    listOfDelay = asyncio.run(listOfDelay)
+    listOfDelay = asyncio.run(wait_n(n, max_delay))
     total_time = 0
     for i in range(n):
         total_time += listOfDelay[i]
