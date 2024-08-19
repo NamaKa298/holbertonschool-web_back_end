@@ -28,11 +28,14 @@ class Server:
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """ takes two integer arguments page with default
         value 1 and page_size with default value 10"""
-        assert isinstance(page, int) and isinstance(page_size, int),
-        "page and page_size must be integers"
-        assert page > 0 and page_size > 0,
-        "page and page_size must be greater than 0"
+        assert isinstance(page, int) and isinstance(page_size, int),\
+            "page and page_size must be integers"
+        assert page > 0 and page_size > 0,\
+            "page and page_size must be greater than 0"
         start_index, end_index = index_range(page, page_size)
         dataset = self.dataset()
+
+        if start_index >= len(dataset) or start_index < 0:
+            return []
 
         return dataset[start_index:end_index]
