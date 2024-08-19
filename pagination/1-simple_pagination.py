@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """1. Simple pagination"""
 import csv
-import math
 from typing import List
 index_range = __import__('0-simple_helper_function').index_range
 
@@ -31,7 +30,7 @@ class Server:
         assert isinstance(page, int) and isinstance(page_size, int)
         assert page > 0 and page_size > 0
         start_index, end_index = index_range(page, page_size)
-        dataset : List = self.dataset()
+        dataset = self.dataset()
 
         if start_index >= len(dataset) or start_index < 0:
             return []
