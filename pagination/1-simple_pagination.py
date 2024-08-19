@@ -3,6 +3,7 @@
 import csv
 import math
 from typing import List
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
@@ -27,21 +28,12 @@ class Server:
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """ takes two integer arguments page with default
         value 1 and page_size with default value 10"""
-        assert isinstance(page, int) and isinstance(page_size, int),\
-            "page and page_size must be integers"
-        assert page > 0 and page_size > 0,\
-            "page and page_size must be greater than 0"
+        assert isinstance(page, int) and isinstance(page_size, int)
+        assert page > 0 and page_size > 0
         start_index, end_index = index_range(page, page_size)
-        dataset = self.dataset()
+        dataset : List = self.dataset()
 
         if start_index >= len(dataset) or start_index < 0:
             return []
 
         return dataset[start_index:end_index]
-
-def index_range(page: int, page_size: int) -> tuple:
-    """return a tuple of size two containing a start
-    index and an end index corresponding to the range of
-    indexes to return in a list for those particular
-    pagination parameters."""
-    return (page - 1) * page_size, page * page_size
