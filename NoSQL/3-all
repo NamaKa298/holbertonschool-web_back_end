@@ -1,2 +1,2 @@
 // 3. All documents
-my_db.school.find()
+my_db.school.find().pretty()
