@@ -3,7 +3,7 @@ const countStudents = require('./3-read_file_async');
 
 const database = process.argv[2];
 
-const app = http.createServer(async (req, res) => {
+const app = http.createServer((req, res) => {
   if (req.url === '/' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
@@ -11,36 +11,33 @@ const app = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.write('This is the list of our students\n');
 
-    try {
-      // Capture la sortie de console.log()
-      const logCapture = [];
-      const originalLog = console.log;
-      console.log = (...args) => {
-        logCapture.push(args.join(' '));
-      };
+    // Capture la sortie console.log() de countStudents
+    let oldLog = console.log;
+    let logOutput = '';
+    
+    console.log = function(message) {
+      logOutput += message + '\n';
+    };
 
-      await countStudents(database);
-
-      // Restaurer la méthode console.log
-      console.log = originalLog;
-
-      // Envoie la réponse au client
-      res.write(logCapture.join('\n'));
-      res.end();
-    } catch (error) {
-      // Restaurer la méthode console.log en cas d'erreur
-      console.log = originalLog;
-      res.write('Cannot load the database\n');
-      res.end();
-    }
+    countStudents(database)
+      .then(() => {
+        console.log = oldLog; // Restaure la méthode console.log originale
+        res.write(logOutput);
+        res.end();
+      })
+      .catch((error) => {
+        console.log = oldLog; // Restaure la méthode console.log originale
+        res.write(`${error.message}\n`);
+        res.end();
+      });
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
   }
 });
 
-app.listen(process.env.PORT || 1245, () => {
-  console.log('Serveur en cours d\'exécution sur le port 1245');
+app.listen(1245, () => {
+  console.log('Server listening on port 1245');
 });
 
 module.exports = app;
