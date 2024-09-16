@@ -28,12 +28,13 @@ const app = http.createServer((req, res) => {
     countStudents(database)
       .then(() => {
         process.stdout.write = originalStdoutWrite;
-        const output = logCapture.join('').trim();
-        res.end(output);
+        res.write(logCapture.join(''));
+        res.end();
       })
       .catch((error) => {
         process.stdout.write = originalStdoutWrite;
-        res.end(`${error.message}`);
+        res.write(`${error.message}\n`);
+        res.end();
       });
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -41,6 +42,8 @@ const app = http.createServer((req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 1245);
+app.listen(process.env.PORT || 1245, () => {
+  console.log('Serveur en cours d\'exécution sur le port 1245');
+});
 
 module.exports = app;
