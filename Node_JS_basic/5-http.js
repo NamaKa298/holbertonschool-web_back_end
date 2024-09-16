@@ -1,29 +1,25 @@
 const http = require('http');
 const countStudents = require('./3-read_file_async');
 
-const database = process.argv[2];
+const hostname = '127.0.0.1';
+const port = 1245;
+const DB = process.argv[2];
 
 const app = http.createServer((req, res) => {
-  if (req.url === '/' && req.method === 'GET') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  if (req.url === '/') {
     res.end('Hello Holberton School!');
-  } else if (req.url === '/students' && req.method === 'GET') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+  } else if (req.url === '/students') {
     res.write('This is the list of our students\n');
-    countStudents(database).then((output) => {
-        console.log(output);
-        res.end(output);
-      })
-      .catch((error) => {
-        res.write(error.message);
-        res.end();
-      });
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found');
+    countStudents(DB).then((result) => {
+      res.end(result.join('\n'));
+    }).catch((error) => {
+      res.end(`${error.message}`);
+    });
   }
 });
 
-app.listen(process.env.PORT || 1245);
+app.listen(port, hostname);
 
 module.exports = app;
