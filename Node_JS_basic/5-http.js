@@ -10,13 +10,13 @@ const app = http.createServer((req, res) => {
   } else if (req.url === '/students' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.write('This is the list of our students\n');
-    countStudents(database)
-      .then((output) => {
-        res.write(output);
-        res.end();
+    countStudents(database).then((output) => {
+        console.log(output);
+        res.end(output);
       })
       .catch((error) => {
-        res.end(error.message);
+        res.write(error.message);
+        res.end();
       });
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
