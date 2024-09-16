@@ -4,6 +4,7 @@ async function countStudents(chemin) {
   try {
     const data = await fs.readFile(chemin, 'utf8');
     const lignes = data.trim().split('\n');
+    
     if (lignes.length <= 1) {
       throw new Error('Cannot load the database');
     }
@@ -23,12 +24,16 @@ async function countStudents(chemin) {
       }
     }
 
-    console.log(`Number of students: ${totalStudents}`);
+    // Créer la sortie sous forme de chaîne
+    let output = `Number of students: ${totalStudents}\n`;
     for (const field in students) {
       if (Object.prototype.hasOwnProperty.call(students, field)) {
-        console.log(`Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}`);
+        output += `Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}\n`;
       }
     }
+    
+    // Retourner la sortie sous forme de chaîne
+    return output.trim();
   } catch (err) {
     throw new Error('Cannot load the database');
   }
