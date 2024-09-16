@@ -1,9 +1,11 @@
 const http = require('http');
 const countStudents = require('./3-read_file_async');
 
+// Obtenir le chemin du fichier à partir des arguments de la ligne de commande
 const database = process.argv[2];
 
-const app = http.createServer((req, res) => {
+// Créer le serveur HTTP
+const app = http.createServer(async (req, res) => {
   if (req.url === '/' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
@@ -11,33 +13,25 @@ const app = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.write('This is the list of our students\n');
 
-    // Capture la sortie console.log() de countStudents
-    let oldLog = console.log;
-    let logOutput = '';
-    
-    console.log = function(message) {
-      logOutput += message + '\n';
-    };
-
-    countStudents(database)
-      .then(() => {
-        console.log = oldLog; // Restaure la méthode console.log originale
-        res.write(logOutput);
-        res.end();
-      })
-      .catch((error) => {
-        console.log = oldLog; // Restaure la méthode console.log originale
-        res.write(`${error.message}\n`);
-        res.end();
-      });
+    try {
+      // Appel de countStudents et capture des résultats
+      const output = await countStudents(database);
+      res.write(output);
+      res.end();
+    } catch (error) {
+      // Gestion des erreurs
+      res.write(`${error.message}\n`);
+      res.end();
+    }
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
   }
 });
 
-app.listen(1245, () => {
-  console.log('Server listening on port 1245');
+// Le serveur écoute sur le port 1245
+app.listen(process.env.PORT || 1245, () => {
+  console.log('Server running on port 1245');
 });
 
 module.exports = app;
