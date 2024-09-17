@@ -1,24 +1,30 @@
 const express = require('express');
 const countStudents = require('./3-read_file_async');
-
-const database = process.argv[2];
-const port = 1245;
 const app = express();
-module.exports = app;
+const path = process.argv[2];
 
+// Route pour "/"
 app.get('/', (req, res) => {
-  res.setHeader('Content-Type', 'text/plain');
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', (req, res) => {
-  res.setHeader('Content-Type', 'text/plain');
+// Route pour "/students"
+app.get('/students', async (req, res) => {
   res.write('This is the list of our students\n');
-  countStudents(database).then((data) => {
-    res.end(data.join('\n'));
-  }).catch((error) => {
-    res.end(`${error.message}`);
-  });
+  
+  try {
+    const output = await countStudents(path);
+    res.write(output);
+  } catch (err) {
+    res.write(err.message);
+  }
+  
+  res.end();
 });
 
-app.listen(port);
+// Serveur écoute sur le port 1245
+app.listen(1245, () => {
+  console.log('Server is listening on port 1245');
+});
+
+module.exports = app;
