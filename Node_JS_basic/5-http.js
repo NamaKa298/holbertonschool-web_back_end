@@ -17,7 +17,7 @@ const app = http.createServer(async (req, res) => {
       return;
     }
 
-    res.end();  // Fin de la réponse
+    res.end();
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
