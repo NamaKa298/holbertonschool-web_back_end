@@ -1,39 +1,26 @@
 const fs = require('fs').promises;
 
-async function countStudents(chemin) {
+async function countStudents(path) {
   try {
-    const data = await fs.readFile(chemin, 'utf8');
-    const lignes = data.trim().split('\n');
-    
-    if (lignes.length <= 1) {
-      throw new Error('Cannot load the database');
-    }
+    const data = await fs.readFile(path, 'utf8');  // Read the file asynchronously
+    const lines = data.split('\n');  // Split by line
+    const students = lines.filter(line => line.trim() !== '').slice(1);  // Ignore empty lines and header
+    const fields = {};
 
-    const students = {};
-    let totalStudents = 0;
-
-    for (let i = 1; i < lignes.length; i += 1) {
-      const line = lignes[i].trim();
-      if (line) {
-        const [firstname, , , field] = line.split(',');
-        if (!students[field]) {
-          students[field] = [];
-        }
-        students[field].push(firstname);
-        totalStudents += 1;
+    students.forEach(student => {
+      const details = student.split(',');  // Split by CSV columns
+      const field = details[3];  // Field is assumed to be in the 4th column (index 3)
+      if (!fields[field]) {
+        fields[field] = [];
       }
+      fields[field].push(details[0]);  // Add student name (assumed to be the 1st column)
+    });
+
+    console.log(`Number of students: ${students.length}`);
+    for (const [field, names] of Object.entries(fields)) {
+      console.log(`Number of students in ${field}: ${names.length}. List: ${names.join(', ')}`);
     }
 
-    // Créer la sortie sous forme de chaîne
-    let output = `Number of students: ${totalStudents}\n`;
-    for (const field in students) {
-      if (Object.prototype.hasOwnProperty.call(students, field)) {
-        output += `Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}\n`;
-      }
-    }
-    
-    // Retourner la sortie sous forme de chaîne
-    return output.trim();
   } catch (err) {
     throw new Error('Cannot load the database');
   }
