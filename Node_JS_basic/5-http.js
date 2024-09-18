@@ -11,7 +11,8 @@ const app = http.createServer(async (req, res) => {
     res.write('This is the list of our students\n');
     
     try {
-      await countStudents(path);
+      const output = await countStudents(path);
+      res.write(output);
     } catch (err) {
       res.end(err.message);
       return;
