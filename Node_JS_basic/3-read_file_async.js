@@ -23,12 +23,13 @@ async function countStudents(chemin) {
       }
     }
 
-    console.log(`Number of students: ${totalStudents}`);
+    let result = `Number of students: ${totalStudents}\n`;
     for (const field in students) {
       if (Object.prototype.hasOwnProperty.call(students, field)) {
-        console.log(`Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}`);
+        result += `Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}\n`;
       }
     }
+    return result; // Renvoie le résultat sous forme de chaîne de caractères
   } catch (err) {
     throw new Error('Cannot load the database');
   }
