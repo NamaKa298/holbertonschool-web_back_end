@@ -29,7 +29,6 @@ async function countStudents(chemin) {
         console.log(`Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}`);
       }
     }
-    return output;
   } catch (err) {
     throw new Error('Cannot load the database');
   }
