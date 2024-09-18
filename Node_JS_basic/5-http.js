@@ -1,6 +1,6 @@
 const http = require('http');
 const countStudents = require('./3-read_file_async');
-const path = process.argv[2];  // Le chemin de la base de données est passé en argument
+const path = process.argv[2];
 
 const app = http.createServer(async (req, res) => {
   if (req.url === '/') {
@@ -9,9 +9,12 @@ const app = http.createServer(async (req, res) => {
   } else if (req.url === '/students') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.write('This is the list of our students\n');
-    
+
     try {
-      await countStudents(path);
+      // Utiliser countStudents pour récupérer les données
+      const studentData = await countStudents(path);
+      // Le code de countStudents doit être modifié pour renvoyer les données.
+      res.write(studentData);
     } catch (err) {
       res.end(err.message);
       return;
@@ -24,6 +27,8 @@ const app = http.createServer(async (req, res) => {
   }
 });
 
-app.listen(1245);
+app.listen(1245, () => {
+  console.log('Server listening on port 1245');
+});
 
 module.exports = app;
