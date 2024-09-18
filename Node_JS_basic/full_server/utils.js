@@ -1,26 +1,23 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
-async function readDatabase(filePath) {
-  try {
-    const data = await fs.readFile(filePath, 'utf8');
-    const lines = data.trim().split('\n');
-    const students = {};
+export default function readDatabase(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(Error('Cannot load the database'));
+      } else {
+        const [headerLine, ...lines] = data.split('\n').filter((line) => line.length > 0);
+        const headers = headerLine.split(',');
 
-    for (let i = 1; i < lines.length; i += 1) {
-      const line = lines[i].trim();
-      if (line) {
-        const [firstname, , , field] = line.split(',');
-        if (!students[field]) {
-          students[field] = [];
-        }
-        students[field].push(firstname);
+        const listObj = lines.map((line) => line.split(',').reduce((object, currentValue, index) => Object.assign(object, { [headers[index]]: currentValue }), {}));
+
+        const groupByField = listObj.reduce((res, currentValue) => {
+          res[currentValue.field] = res[currentValue.field] || [];
+          res[currentValue.field].push(currentValue.firstname);
+          return res;
+        }, {});
+        resolve(groupByField);
       }
-    }
-
-    return students;
-  } catch (err) {
-    throw new Error('Cannot load the database');
-  }
+    });
+  });
 }
-
-module.exports = readDatabase;
